@@ -22,35 +22,50 @@ function perfect_portfolio_add_sidebar_layout_box(){
 add_action( 'add_meta_boxes', 'perfect_portfolio_add_sidebar_layout_box' );
 
 $perfect_portfolio_sidebar_layout = array(    
-    'default-sidebar'=> array(
-    	 'value'     => 'default-sidebar',
-    	 'label'     => __( 'Default Sidebar', 'perfect-portfolio' ),
-    	 'thumbnail' => get_template_directory_uri() . '/images/default-sidebar.png'
-   	),
-    'no-sidebar'     => array(
-    	 'value'     => 'no-sidebar',
-    	 'label'     => __( 'Full Width', 'perfect-portfolio' ),
-    	 'thumbnail' => get_template_directory_uri() . '/images/full-width.png'
-   	),
-    'centered'     => array(
-    	 'value'     => 'centered',
-    	 'label'     => __( 'Full Width Centered', 'perfect-portfolio' ),
-    	 'thumbnail' => get_template_directory_uri() . '/images/full-width-centered.png'
-   	),    
-    'left-sidebar' => array(
-         'value'     => 'left-sidebar',
-    	 'label'     => __( 'Left Sidebar', 'perfect-portfolio' ),
-    	 'thumbnail' => get_template_directory_uri() . '/images/left-sidebar.png'         
-    ),
-    'right-sidebar' => array(
-         'value'     => 'right-sidebar',
-    	 'label'     => __( 'Right Sidebar', 'perfect-portfolio' ),
-    	 'thumbnail' => get_template_directory_uri() . '/images/right-sidebar.png'         
-     )    
+      
 );
 
+/**
+ * Get sidebar layout data.
+ *
+ * @return array
+ */
+if( ! function_exists( 'perfect_portfolio_get_sidebar_layout_data' ) ){
+    function perfect_portfolio_get_sidebar_layout_data(){
+        return array(
+             'default-sidebar'=> array(
+                'value'     => 'default-sidebar',
+                'label'     => __( 'Default Sidebar', 'perfect-portfolio' ),
+                'thumbnail' => get_template_directory_uri() . '/images/default-sidebar.png'
+            ),
+            'no-sidebar'     => array(
+                'value'     => 'no-sidebar',
+                'label'     => __( 'Full Width', 'perfect-portfolio' ),
+                'thumbnail' => get_template_directory_uri() . '/images/full-width.png'
+            ),
+            'centered'     => array(
+                'value'     => 'centered',
+                'label'     => __( 'Full Width Centered', 'perfect-portfolio' ),
+                'thumbnail' => get_template_directory_uri() . '/images/full-width-centered.png'
+            ),    
+            'left-sidebar' => array(
+                'value'     => 'left-sidebar',
+                'label'     => __( 'Left Sidebar', 'perfect-portfolio' ),
+                'thumbnail' => get_template_directory_uri() . '/images/left-sidebar.png'         
+            ),
+            'right-sidebar' => array(
+                'value'     => 'right-sidebar',
+                'label'     => __( 'Right Sidebar', 'perfect-portfolio' ),
+                'thumbnail' => get_template_directory_uri() . '/images/right-sidebar.png'         
+            )    
+        );
+    }
+}
+
+
 function perfect_portfolio_sidebar_layout_callback(){
-    global $post , $perfect_portfolio_sidebar_layout;
+    global $post;
+    $perfect_portfolio_sidebar_layout = perfect_portfolio_get_sidebar_layout_data();    
     wp_nonce_field( basename( __FILE__ ), 'perfect_portfolio_nonce' ); ?> 
     <table class="form-table">
         <tr>
@@ -78,7 +93,7 @@ function perfect_portfolio_sidebar_layout_callback(){
 }
 
 function perfect_portfolio_save_sidebar_layout( $post_id ){
-    global $perfect_portfolio_sidebar_layout;
+    $perfect_portfolio_sidebar_layout = perfect_portfolio_get_sidebar_layout_data();    
 
     // Verify the nonce before proceeding.
     if( !isset( $_POST[ 'perfect_portfolio_nonce' ] ) || !wp_verify_nonce( $_POST[ 'perfect_portfolio_nonce' ], basename( __FILE__ ) ) )

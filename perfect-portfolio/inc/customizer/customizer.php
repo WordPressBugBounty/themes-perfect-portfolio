@@ -36,7 +36,7 @@ function perfect_portfolio_customize_script(){
     $array = array(
         'ajax_url'   => admin_url( 'admin-ajax.php' ),
     	'flushit'    => __( 'Successfully Flushed!','perfect-portfolio' ),
-    	'nonce'      => wp_create_nonce('ajax-nonce')
+    	'nonce'      => wp_create_nonce('perfect_portfolio_flush_fonts_nonce')
     );
     wp_enqueue_style( 'perfect-portfolio-customize', get_template_directory_uri() . '/inc/css/customize-controls.css', array(), false , 'screen' );
     wp_enqueue_script( 'perfect-portfolio-customize', get_template_directory_uri() . '/inc/js/customize.js', array( 'jquery', 'customize-controls' ), PERFECT_PORTFOLIO_THEME_VERSION, true );
@@ -57,19 +57,29 @@ require get_template_directory() . '/inc/customizer-plugin-recommend/customizer-
 
 require get_template_directory() . '/inc/customizer-plugin-recommend/plugin-install/class-plugin-install-helper.php';
 
-$config_customizer = array(
-    'recommended_plugins' => array( 
-        'raratheme-companion' => array(
-            'recommended' => true,
-            'description' => sprintf( 
-                /* translators: %s: plugin name */
-                esc_html__( 'If you want to take full advantage of the features this theme has to offer, please install and activate %s plugin.', 'perfect-portfolio' ), '<strong>RaraTheme Companion</strong>' 
+/**
+ * Initialize Perfect Portfolio Customizer Notice
+ *
+ * @since 1.0.0
+ */
+if( ! function_exists( 'perfect_portfolio_customizer_notice_init' ) ) {
+	function perfect_portfolio_customizer_notice_init() {
+		$config_customizer = array(
+            'recommended_plugins' => array( 
+                'raratheme-companion' => array(
+                    'recommended' => true,
+                    'description' => sprintf( 
+                        /* translators: %s: plugin name */
+                        esc_html__( 'If you want to take full advantage of the features this theme has to offer, please install and activate %s plugin.', 'perfect-portfolio' ), '<strong>RaraTheme Companion</strong>' 
+                    ),
+                ),
             ),
-        ),
-    ),
-    'recommended_plugins_title' => esc_html__( 'Recommended Plugin', 'perfect-portfolio' ),
-    'install_button_label'      => esc_html__( 'Install and Activate', 'perfect-portfolio' ),
-    'activate_button_label'     => esc_html__( 'Activate', 'perfect-portfolio' ),
-    'deactivate_button_label'   => esc_html__( 'Deactivate', 'perfect-portfolio' ),
-);
-Perfect_Portfolio_Customizer_Notice::init( apply_filters( 'perfect_portfolio_customizer_notice_array', $config_customizer ) );
+            'recommended_plugins_title' => esc_html__( 'Recommended Plugin', 'perfect-portfolio' ),
+            'install_button_label'      => esc_html__( 'Install and Activate', 'perfect-portfolio' ),
+            'activate_button_label'     => esc_html__( 'Activate', 'perfect-portfolio' ),
+            'deactivate_button_label'   => esc_html__( 'Deactivate', 'perfect-portfolio' ),
+        );
+        Perfect_Portfolio_Customizer_Notice::init( apply_filters( 'perfect_portfolio_customizer_notice_array', $config_customizer ) );
+    }
+}
+add_action( 'init', 'perfect_portfolio_customizer_notice_init' );
